@@ -18,76 +18,36 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
-	{
-		id: "mizuki-blog",
-		title: "Mizuki Blog Theme",
-		description:
-			"Modern blog theme developed based on the Astro framework, supporting multilingual, dark mode, and responsive design features.",
-		image: "",
-		category: "web",
-		techStack: ["Astro", "TypeScript", "Tailwind CSS", "Svelte"],
-		status: "completed",
-		liveDemo: "https://blog.example.com",
-		sourceCode: "https://github.com/example/mizuki",
-		startDate: "2024-01-01",
-		endDate: "2024-06-01",
-		featured: true,
-		tags: ["Blog", "Theme", "Open Source"],
-	},
-	{
-		id: "portfolio-website",
-		title: "Personal Portfolio",
-		description:
-			"Personal portfolio website showcasing project experience and technical skills.",
-		image: "",
-		category: "web",
-		techStack: ["React", "Next.js", "TypeScript", "Framer Motion"],
-		status: "completed",
-		liveDemo: "https://portfolio.example.com",
-		sourceCode: "https://github.com/example/portfolio",
-		startDate: "2023-09-01",
-		endDate: "2023-12-01",
-		featured: true,
-		tags: ["Portfolio", "React", "Animation"],
-	},
-	{
-		id: "task-manager-app",
-		title: "Task Manager App",
-		description:
-			"Cross-platform task management application supporting team collaboration and project management.",
-		image: "",
-		category: "mobile",
-		techStack: ["React Native", "TypeScript", "Redux", "Firebase"],
-		status: "in-progress",
-		startDate: "2024-03-01",
-		tags: ["Mobile", "Productivity", "Team Collaboration"],
-	},
-	{
-		id: "data-visualization-tool",
-		title: "Data Visualization Tool",
-		description:
-			"Data visualization tool supporting multiple chart types and interactive analysis.",
-		image: "",
-		category: "web",
-		techStack: ["Vue.js", "D3.js", "TypeScript", "Node.js"],
-		status: "completed",
-		liveDemo: "https://dataviz.example.com",
-		startDate: "2023-06-01",
-		endDate: "2023-11-01",
-		tags: ["Data Visualization", "Analytics", "Charts"],
-	},
-	{
-		id: "e-commerce-platform",
-		title: "E-commerce Platform",
-		description:
-			"Full-stack e-commerce platform including user management, product management, and order processing features.",
-		image: "",
-		category: "web",
-		techStack: ["Next.js", "Node.js", "PostgreSQL", "Stripe"],
-		status: "planned",
-		startDate: "2024-07-01",
-		tags: ["E-commerce", "Full Stack", "Payment Integration"],
-	},
+    {
+        id: "imperishable-gate",
+        title: "Imperishable Gate | 不朽之门",
+        description:
+            "受东方Project启发的现代化命令行链接管理系统（好多是AI完成的），支持多用户、标签、别名、备注、自动元数据抓取、智能监控、JWT双令牌认证与系统Keyring安全存储。采用Go+Echo+GORM开发，支持SQLite/MySQL/PostgreSQL，跨平台CLI体验，标签系统极为灵活高效。",
+		image: "/images/projects/imperishable-gate.jpg",
+        category: "web",
+        techStack: [
+            "Go",
+            "Echo",
+            "GORM",
+            "SQLite",
+            "MySQL",
+            "PostgreSQL",
+            "Cobra",
+            "JWT",
+        ],
+        status: "completed",
+        liveDemo: "",
+        sourceCode: "https://github.com/sokx6/imperishable-gate",
+        startDate: "2025-09-30",
+        endDate: "2025-10-11",
+        featured: true,
+        tags: [
+            "命令行",
+            "链接管理",
+            "标签系统",
+            "Go",
+        ],
+    },
 ];
 
 // Get project statistics
