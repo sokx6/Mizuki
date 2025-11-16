@@ -20,8 +20,8 @@ import { LinkPreset } from "./types/config";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 
 export const siteConfig: SiteConfig = {
-	title: "朝花夕拾",
-	subtitle: "Locxl's Blog",
+	title: "locxl",
+	subtitle: "Just a blog",
 
 	lang: SITE_LANG,
 
@@ -272,7 +272,7 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 };
 
 export const commentConfig: CommentConfig = {
-	enable: false, // 启用评论功能。当设置为 false 时，评论组件将不会显示在文章区域。
+	enable: true, // 启用评论功能。当设置为 false 时，评论组件将不会显示在文章区域。
 	twikoo: {
 		envId: "https://www.locxl.site/twikoo-proxy",
 		lang: "zh_CN", // 设置 Twikoo 评论系统语言为中文
