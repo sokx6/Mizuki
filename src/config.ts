@@ -47,9 +47,9 @@ export const siteConfig: SiteConfig = {
 	// 顶栏标题配置
 	navbarTitle: {
 		// 顶栏标题文本
-		text: "MizukiUI",
+		text: "Locxl",
 		// 顶栏标题图标路径，默认使用 public/assets/home/home.png
-		icon: "assets/home/home.png",
+		icon: "assets/home/home.jpg",
 	},
 
 	bangumi: {
@@ -86,57 +86,21 @@ export const siteConfig: SiteConfig = {
 		showModeSwitchOnMobile: "desktop",
 	},
 
-	// 文章列表布局配置
-	postListLayout: {
-		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（双列布局）
-		defaultMode: "grid",
-		// 是否允许用户切换布局
-		allowSwitch: true,
-	},
-
-	// 标签样式配置
-	tagStyle: {
-		// 是否使用新样式（悬停高亮样式）还是旧样式（外框常亮样式）
-		useNewStyle: false,
-	},
-
-	// 壁纸模式配置
-	wallpaperMode: {
-		// 默认壁纸模式：banner=顶部横幅，fullscreen=全屏壁纸，none=无壁纸
-		defaultMode: "banner",
-		// 整体布局方案切换按钮显示设置（默认："desktop"）
-		// "off" = 不显示
-		// "mobile" = 仅在移动端显示
-		// "desktop" = 仅在桌面端显示
-		// "both" = 在所有设备上显示
-		showModeSwitchOnMobile: "desktop",
-	},
-
 	banner: {
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				"/assets/desktop-banner/Miku1.webp",
-				"/assets/desktop-banner/Miku2.webp",
-				"/assets/desktop-banner/Miku3.webp",
-				"/assets/desktop-banner/Miku4.webp",
-				"/assets/desktop-banner/Miku5.webp",
+				"/assets/desktop-banner/Miku1.jpg",
+				"/assets/desktop-banner/Miku2.jpg",
+				"/assets/desktop-banner/Miku3.jpg",
+				"/assets/desktop-banner/Miku4.jpg",
 				"/assets/desktop-banner/Congyu1.webp",
 			], // 桌面横幅图片
 			mobile: [
-				"/assets/mobile-banner/Miku1.webp",
-				"/assets/mobile-banner/Miku2.webp",
-				"/assets/mobile-banner/Miku3.webp",
-				"/assets/mobile-banner/Miku4.webp",
-				"/assets/mobile-banner/Miku5.webp",
-				"/assets/mobile-banner/Miku6.webp",
-				"/assets/mobile-banner/Miku7.webp",
-				"/assets/mobile-banner/Miku8.webp",
-				"/assets/mobile-banner/Miku9.webp",
-				"/assets/mobile-banner/Miku10.webp",
-				"/assets/mobile-banner/Miku11.webp",
-				"/assets/mobile-banner/Miku12.webp",
-				"/assets/mobile-banner/Miku13.webp",
+				"/assets/mobile-banner/Miku1.jpg",
+				"/assets/mobile-banner/Miku2.jpg",
+				"/assets/mobile-banner/Miku3.jpg",
+				"/assets/mobile-banner/Miku4.jpg",
 			], // 移动横幅图片
 		}, // 使用本地横幅图片
 
@@ -146,12 +110,6 @@ export const siteConfig: SiteConfig = {
 			enable: true, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
 
 			interval: 15, // 轮播间隔时间（秒）
-		},
-
-		waves: {
-			enable: true, // 是否启用水波纹效果(这个功能比较吃性能)
-			performanceMode: false, // 性能模式：减少动画复杂度(性能提升40%)
-			mobileDisable: false, // 移动端禁用
 		},
 
 		waves: {
@@ -212,10 +170,9 @@ export const siteConfig: SiteConfig = {
 	font: {
 		zenMaruGothic: {
 			enable: false, // 启用全局圆体适合日语和英语，对中文适配一般
-			enable: false, // 启用全局圆体适合日语和英语，对中文适配一般
 		},
 		hanalei: {
-			enable: true, // 启用 Hanalei 字体作为全局字体，适合中文去使用
+			enable: false, // 启用 Hanalei 字体作为全局字体，适合中文去使用
 		},
 	},
 	showLastModified: true, // 控制“上次编辑”卡片显示的开关
