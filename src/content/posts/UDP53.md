@@ -7,6 +7,9 @@ licenseName: "CC BY-SA 4.0"
 tags: [网络,UDP,DNS,门户验证]
 category: 网络
 author: Locxl
+image: 
+   'https://i.stardots.io/locxl/StarDots_2025-11-18T13_15_38.2900Z_1911.png'
+imageAlt: 'UDP53'
 ---
 
 

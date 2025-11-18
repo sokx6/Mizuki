@@ -6,6 +6,8 @@ sourceLink: https://locxl.site/posts/windows-terminal-美化/
 licenseName: "CC BY-SA 4.0"
 tags: [oh-my-posh,美化,终端]
 category: 美化
+image: 'https://i.stardots.io/locxl/StarDots_2025-11-18T13_22_54.0130Z_5508.png'
+imageAlt: 'windows termianl 美化'
 ---
 # 安装powershell最新版
 由于我使用的是最新版（因为用旧版遇到了各种各样的问题），所以我选择先安装powershell的最新版
