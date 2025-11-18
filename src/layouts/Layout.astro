@@ -133,6 +133,45 @@ const bannerOffset =
 
 const umamiEnabled = umamiConfig.enabled || false;
 const umamiScripts = umamiConfig.scripts || ""; // 获取Umami scripts配置
+
+// 构建字体配置的 CSS 变量
+// ASCII 字体优先级最高（用于英文、数字等），CJK 字体作为回退
+let bodyFontFamily = "";
+if (siteConfig.font) {
+	const fonts: string[] = [];
+
+	// 先添加 ASCII 字体（优先级最高）
+	if (siteConfig.font.asciiFont?.fontFamily) {
+		const asciiFont = siteConfig.font.asciiFont.fontFamily;
+		// 如果字体名包含空格，需要用引号包围
+		fonts.push(asciiFont.includes(" ") ? `"${asciiFont}"` : asciiFont);
+	}
+
+	// 再添加 CJK 字体（作为回退）
+	if (siteConfig.font.cjkFont?.fontFamily) {
+		const cjkFont = siteConfig.font.cjkFont.fontFamily;
+		// 如果字体名包含空格，需要用引号包围
+		fonts.push(cjkFont.includes(" ") ? `"${cjkFont}"` : cjkFont);
+	}
+
+	// 添加系统字体作为最终回退
+	fonts.push(
+		"system-ui",
+		"-apple-system",
+		"BlinkMacSystemFont",
+		"'Segoe UI'",
+		"Roboto",
+		"Oxygen",
+		"Ubuntu",
+		"Cantarell",
+		"'Open Sans'",
+		"'Helvetica Neue'",
+		"sans-serif",
+	);
+
+	// 组合成完整的 font-family 字符串
+	bodyFontFamily = fonts.join(", ");
+}
 ---
 
 <!DOCTYPE html>
@@ -248,7 +287,8 @@ const umamiScripts = umamiConfig.scripts || ""; // 获取Umami scripts配置
 		{umamiEnabled && umamiScripts && <Fragment set:html={umamiScripts} />}
 
 </head>
-	<body class=" min-h-screen " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner, "zen-maru-gothic-enabled": siteConfig.font.zenMaruGothic.enable, "hanalei-enabled": siteConfig.font.hanalei.enable}]}
+	<body class=" min-h-screen " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
+		  style={bodyFontFamily ? `font-family: ${bodyFontFamily};` : ''}
 		  data-overlayscrollbars-initialize
 	>
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KRX3XGVH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -666,7 +706,9 @@ import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_HOME,
 	BANNER_HEIGHT_EXTEND,
-	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT
+	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
+	DARK_MODE,
+	DEFAULT_THEME
 } from "../constants/constants";
 import { siteConfig } from '../config';
 
@@ -1145,16 +1187,28 @@ const setup = () => {
 		});
 		
 		// 同步主题状态 - 解决从首页进入文章页面时代码块渲染问题
-		const storedTheme = localStorage.getItem('theme') || 'LIGHT_MODE';
-		const isDark = storedTheme === 'DARK_MODE';
+		const storedTheme = localStorage.getItem('theme') || DEFAULT_THEME;
+		const isDark = storedTheme === DARK_MODE;
 		const expectedTheme = isDark ? 'github-dark' : 'github-light';
 		const currentTheme = document.documentElement.getAttribute('data-theme');
+		const hasDarkClass = document.documentElement.classList.contains('dark');
 		
 		// 如果主题不匹配，使用批量更新减少重绘
-		if (currentTheme !== expectedTheme) {
+		if (currentTheme !== expectedTheme || hasDarkClass !== isDark) {
 			// 使用 requestAnimationFrame 批量更新，减少重绘
 			requestAnimationFrame(() => {
-				document.documentElement.setAttribute('data-theme', expectedTheme);
+				// 同步 data-theme 属性
+				if (currentTheme !== expectedTheme) {
+					document.documentElement.setAttribute('data-theme', expectedTheme);
+				}
+				// 同步 dark class
+				if (hasDarkClass !== isDark) {
+					if (isDark) {
+						document.documentElement.classList.add('dark');
+					} else {
+						document.documentElement.classList.remove('dark');
+					}
+				}
 			});
 		}
 		

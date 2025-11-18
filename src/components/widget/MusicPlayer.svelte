@@ -59,77 +59,86 @@ let currentSong = {
 	duration: 0,
 };
 
-let playlist = [];
+type Song = {
+	id: number;
+	title: string;
+	artist: string;
+	cover: string;
+	url: string;
+	duration: number;
+};
+
+let playlist: Song[] = [];
 let currentIndex = 0;
 let audio: HTMLAudioElement;
 let progressBar: HTMLElement;
 let volumeBar: HTMLElement;
 
 const localPlaylist = [
-    {
-        "id": 1,
-        "title": "-遠い空へ-",
-        "artist": "市川淳",
-        "cover": "assets/music/cover/-遠い空へ- - 市川淳.png",
-        "url": "assets/music/url/-遠い空へ- - 市川淳.mp3",
-        "duration": 211
-    },
-    {
-        "id": 2,
-        "title": "春日影",
-        "artist": "MyGO!!!!!",
-        "cover": "assets/music/cover/春日影 - MyGO!!!!!.png",
-        "url": "assets/music/url/春日影 - MyGO!!!!!.mp3",
-        "duration": 256
-    },
-    {
-        "id": 3,
-        "title": "枫",
-        "artist": "周杰伦",
-        "cover": "assets/music/cover/枫 - 周杰伦.png",
-        "url": "assets/music/url/枫 - 周杰伦.mp3",
-        "duration": 275
-    },
-    {
-        "id": 4,
-        "title": "勾指起誓",
-        "artist": "洛天依&ilem",
-        "cover": "assets/music/cover/勾指起誓 - 洛天依&ilem.png",
-        "url": "assets/music/url/勾指起誓 - 洛天依&ilem.mp3",
-        "duration": 183
-    },
-    {
-        "id": 5,
-        "title": "夜の向日葵",
-        "artist": "szak",
-        "cover": "assets/music/cover/夜の向日葵 - szak.png",
-        "url": "assets/music/url/夜の向日葵 - szak.mp3",
-        "duration": 164
-    },
-    {
-        "id": 6,
-        "title": "Miku",
-        "artist": "Anamanaguchi&初音ミク",
-        "cover": "assets/music/cover/Miku - Anamanaguchi&初音ミク.png",
-        "url": "assets/music/url/Miku - Anamanaguchi&初音ミク.mp3",
-        "duration": 223
-    },
-    {
-        "id": 8,
-        "title": "One Last Kiss",
-        "artist": "宇多田ヒカル",
-        "cover": "assets/music/cover/One Last Kiss - 宇多田ヒカル.png",
-        "url": "assets/music/url/One Last Kiss - 宇多田ヒカル.mp3",
-        "duration": 252
-    },
-    {
-        "id": 10,
-        "title": "鳥の詩",
-        "artist": "Lia",
-        "cover": "assets/music/cover/鳥の詩 - Lia.png",
-        "url": "assets/music/url/鳥の詩 - Lia.mp3",
-        "duration": 366
-    }
+	{
+		id: 1,
+		title: "-遠い空へ-",
+		artist: "市川淳",
+		cover: "assets/music/cover/-遠い空へ- - 市川淳.png",
+		url: "assets/music/url/-遠い空へ- - 市川淳.mp3",
+		duration: 211,
+	},
+	{
+		id: 2,
+		title: "春日影",
+		artist: "MyGO!!!!!",
+		cover: "assets/music/cover/春日影 - MyGO!!!!!.png",
+		url: "assets/music/url/春日影 - MyGO!!!!!.mp3",
+		duration: 256,
+	},
+	{
+		id: 3,
+		title: "枫",
+		artist: "周杰伦",
+		cover: "assets/music/cover/枫 - 周杰伦.png",
+		url: "assets/music/url/枫 - 周杰伦.mp3",
+		duration: 275,
+	},
+	{
+		id: 4,
+		title: "勾指起誓",
+		artist: "洛天依&ilem",
+		cover: "assets/music/cover/勾指起誓 - 洛天依&ilem.png",
+		url: "assets/music/url/勾指起誓 - 洛天依&ilem.mp3",
+		duration: 183,
+	},
+	{
+		id: 5,
+		title: "夜の向日葵",
+		artist: "szak",
+		cover: "assets/music/cover/夜の向日葵 - szak.png",
+		url: "assets/music/url/夜の向日葵 - szak.mp3",
+		duration: 164,
+	},
+	{
+		id: 6,
+		title: "Miku",
+		artist: "Anamanaguchi&初音ミク",
+		cover: "assets/music/cover/Miku - Anamanaguchi&初音ミク.png",
+		url: "assets/music/url/Miku - Anamanaguchi&初音ミク.mp3",
+		duration: 223,
+	},
+	{
+		id: 8,
+		title: "One Last Kiss",
+		artist: "宇多田ヒカル",
+		cover: "assets/music/cover/One Last Kiss - 宇多田ヒカル.png",
+		url: "assets/music/url/One Last Kiss - 宇多田ヒカル.mp3",
+		duration: 252,
+	},
+	{
+		id: 10,
+		title: "鳥の詩",
+		artist: "Lia",
+		cover: "assets/music/cover/鳥の詩 - Lia.png",
+		url: "assets/music/url/鳥の詩 - Lia.mp3",
+		duration: 366,
+	},
 ];
 
 async function fetchMetingPlaylist() {

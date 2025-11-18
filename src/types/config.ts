@@ -11,6 +11,7 @@ export type SiteConfig = {
 	subtitle: string;
 	siteURL: string; // 站点URL，以斜杠结尾，例如：https://mizuki.mysqil.com/
 	keywords?: string[]; // 站点关键词，用于生成 <meta name="keywords">
+	siteStartDate?: string; // 站点开始日期，格式：YYYY-MM-DD，用于计算运行天数
 
 	timeZone:
 		| -12
@@ -65,6 +66,7 @@ export type SiteConfig = {
 		skills: boolean; // 技能页面开关
 		timeline: boolean; // 时间线页面开关
 		albums: boolean; // 相册页面开关
+		devices: boolean; // 设备页面开关
 	};
 
 	// 文章列表布局配置
@@ -81,11 +83,17 @@ export type SiteConfig = {
 
 	// 添加字体配置
 	font: {
-		zenMaruGothic: {
-			enable: boolean; // 是否使用 ZenMaruGothic-Black 作为全局字体
+		asciiFont: {
+			fontFamily: string;
+			fontWeight: string | number;
+			localFonts: string[];
+			enableCompress: boolean;
 		};
-		hanalei: {
-			enable: boolean; // 是否使用 Hanalei 作为全局字体
+		cjkFont: {
+			fontFamily: string;
+			fontWeight: string | number;
+			localFonts: string[];
+			enableCompress: boolean;
 		};
 	};
 
@@ -250,6 +258,7 @@ export type BlogPostData = {
 
 export type ExpressiveCodeConfig = {
 	theme: string;
+	hideDuringThemeTransition?: boolean; // 是否在主题切换时隐藏代码块
 };
 
 export type AnnouncementConfig = {
@@ -269,6 +278,11 @@ export type AnnouncementConfig = {
 
 export type MusicPlayerConfig = {
 	enable: boolean; // 是否启用音乐播放器功能
+	mode: "meting" | "local"; // 音乐播放器模式
+	meting_api: string; // Meting API 地址
+	id: string; // 歌单ID
+	server: string; // 音乐源服务器
+	type: string; // 音乐类型
 };
 
 export type FooterConfig = {
@@ -285,6 +299,8 @@ export type WidgetComponentType =
 	| "toc"
 	| "music-player"
 	| "pio" // 添加 pio 组件类型
+	| "site-stats" // 站点统计组件
+	| "calendar" // 日历组件
 	| "custom";
 
 export type WidgetComponentConfig = {
@@ -292,6 +308,7 @@ export type WidgetComponentConfig = {
 	enable: boolean; // 是否启用该组件
 	order: number; // 显示顺序，数字越小越靠前
 	position: "top" | "sticky"; // 组件位置：顶部固定区域或粘性区域
+	sidebar?: "left" | "right"; // 组件所在侧边栏：左侧或右侧（仅当启用双侧边栏时有效）
 	class?: string; // 自定义CSS类名
 	style?: string; // 自定义内联样式
 	animationDelay?: number; // 动画延迟时间（毫秒）
@@ -303,8 +320,7 @@ export type WidgetComponentConfig = {
 };
 
 export type SidebarLayoutConfig = {
-	enable: boolean; // 是否启用侧边栏
-	position: "left" | "right"; // 侧边栏位置：左侧或右侧
+	position: "unilateral" | "both"; // 侧边栏位置：单侧或双侧
 	components: WidgetComponentConfig[]; // 组件配置列表
 	defaultAnimation: {
 		enable: boolean; // 是否启用默认动画
