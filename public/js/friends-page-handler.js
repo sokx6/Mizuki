@@ -29,7 +29,7 @@
 			return false;
 		}
 		
-		var tagFilters = document.querySelectorAll('.tag-filter');
+		var tagFilters = document.querySelectorAll('.filter-tag');
 		var friendCards = document.querySelectorAll('.friend-card');
 		var copyButtons = document.querySelectorAll('.copy-link-btn');
 		

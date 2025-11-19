@@ -286,4 +286,8 @@ export const zh_CN: Translation = {
 	[Key.calendarOctober]: "10月",
 	[Key.calendarNovember]: "11月",
 	[Key.calendarDecember]: "12月",
+
+	// 右边栏控制
+	[Key.rightSidebarShow]: "点击显示右边栏",
+	[Key.rightSidebarHide]: "点击隐藏右边栏",
 };

@@ -300,4 +300,8 @@ export const ja: Translation = {
 	[Key.calendarOctober]: "10月",
 	[Key.calendarNovember]: "11月",
 	[Key.calendarDecember]: "12月",
+
+	// 右边栏控制
+	[Key.rightSidebarShow]: "クリックして右サイドバーを表示",
+	[Key.rightSidebarHide]: "クリックして右サイドバーを非表示",
 };

@@ -23,6 +23,8 @@ import {
 	BANNER_HEIGHT_HOME,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "../constants/constants";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
 
@@ -119,7 +121,7 @@ const mainPanelTop =
 	siteConfig.wallpaperMode.defaultMode === "banner"
 		? `${BANNER_HEIGHT}vh`
 		: "5.5rem";
-const mobileNonHomeMainTop = !isHomePage ? "5.5rem" : mainPanelTop;
+const mobileNonHomeTop = !isHomePage ? "5.5rem" : mainPanelTop;
 
 // 当默认模式不是 banner 时，主内容区域应该始终从顶栏下面开始
 const finalMainPanelTop =
@@ -143,6 +145,10 @@ const hasRightSidebarComponents =
 // 检查默认布局模式，如果是 grid 模式，右侧边栏初始就应该隐藏
 const defaultPostListLayout = siteConfig.postListLayout?.defaultMode || "list";
 const initialRightSidebarHidden = defaultPostListLayout === "grid";
+
+// 检查是否启用右侧边栏控制按钮
+const showRightControlButton =
+	sidebarLayoutConfig.showRightControlButton !== false;
 
 // 动态网格布局类名 - 根据侧边栏模式调整列宽
 const gridCols = `
@@ -202,15 +208,14 @@ const transparentClass = shouldEnableTransparency
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
 
-<script is:inline define:vars={{navbarTransparentMode: siteConfig.banner?.navbar?.transparentMode || "semi", defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode, defaultPostListLayout: siteConfig.postListLayout?.defaultMode || "list", useJapaneseBadge: siteConfig.toc?.useJapaneseBadge || false, tocDepth: siteConfig.toc?.depth || 3}}>
-	// 将siteConfig暴露到window对象
-	window.siteConfig = {
-		toc: {
-			useJapaneseBadge: useJapaneseBadge,
-			depth: tocDepth
-		}
-	};
-	
+<script is:inline define:vars={{
+	navbarTransparentMode: siteConfig.banner?.navbar?.transparentMode || "semi", 
+	defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode, 
+	defaultPostListLayout: siteConfig.postListLayout?.defaultMode || "list",
+	showRightControlButton: showRightControlButton,
+	i18nRightSidebarShow: i18n(I18nKey.rightSidebarShow),
+	i18nRightSidebarHide: i18n(I18nKey.rightSidebarHide)
+}}>
 	// 立即执行，在页面渲染前应用壁纸模式和布局模式，避免闪烁
 	(function() {
 		const wallpaperMode = localStorage.getItem('wallpaperMode') || defaultWallpaperMode;
@@ -269,6 +274,18 @@ const transparentClass = shouldEnableTransparency
 					}
 				}
 				
+				// 根据布局模式显示或隐藏右侧边栏控制按钮
+				const toggleButton = document.getElementById('right-sidebar-toggle');
+				if (toggleButton) {
+					// 检查是否为桌面端
+					const isDesktop = window.innerWidth >= 1280;
+					if (currentLayout === 'grid' || !isDesktop) {
+						toggleButton.style.display = 'none';
+					} else {
+						toggleButton.style.display = 'flex';
+					}
+				}
+				
 				// 同时更新文章列表容器的CSS类
 				const postListContainer = document.getElementById('post-list-container');
 				if (postListContainer) {
@@ -287,6 +304,254 @@ const transparentClass = shouldEnableTransparency
 			}
 		});
 	})();
+	
+	// 右边栏展开/收起控制
+	function initRightSidebarToggle() {
+		// 如果配置中禁用了右侧边栏控制按钮，直接返回
+		if (!showRightControlButton) {
+			return;
+		}
+		
+		const toggleButton = document.getElementById('right-sidebar-toggle');
+		const rightSidebar = document.querySelector('.right-sidebar-container');
+		const mainGrid = document.getElementById('main-grid');
+		const toggleIcon = toggleButton?.querySelector('.chevron-icon');
+		const toggleTip = toggleButton?.querySelector('.toggle-tip');
+		
+		if (!toggleButton || !rightSidebar || !mainGrid) return;
+		
+		// 根据当前布局模式显示/隐藏按钮
+		function updateToggleButtonVisibility() {
+			const currentLayout = mainGrid.getAttribute('data-layout-mode') || defaultPostListLayout;
+			// 检查是否为桌面端（lg 断点是 1280px）
+			const isDesktop = window.innerWidth >= 1280;
+			
+			if (currentLayout === 'grid' || !isDesktop) {
+				// 网格模式下或移动端隐藏按钮
+				toggleButton.style.display = 'none';
+			} else {
+				// 列表模式下且在桌面端显示按钮
+				toggleButton.style.display = 'flex';
+			}
+		}
+		
+		// 从 localStorage 读取右边栏状态，默认展开
+		let isRightSidebarCollapsed = localStorage.getItem('rightSidebarCollapsed') === 'true';
+		// 记录用户手动设置的状态
+		let userManuallySet = localStorage.getItem('rightSidebarManuallySet') === 'true';
+		
+		// 检查是否有足够空间显示 TOC
+		// TOC 显示在 2xl 断点（1536px）以上，宽度为 var(--toc-width) 约 15rem = 240px
+		// 安全宽度 = 页面最大宽度 + 左边栏 + 主内容 + 右边栏 + TOC + 间距
+		// 约为 1536px (2xl) + 240px (TOC) = 1776px
+		const MIN_WIDTH_FOR_TOC = 1776;
+		
+		// 检查当前宽度是否足以显示 TOC
+		function hasEnoughSpaceForTOC() {
+			return window.innerWidth >= MIN_WIDTH_FOR_TOC;
+		}
+		
+		// 自动响应宽度变化
+		function handleResponsiveCollapse() {
+			// 如果用户手动设置过状态，优先遵循用户选择
+			if (userManuallySet && hasEnoughSpaceForTOC()) {
+				// 宽度足够时，恢复用户的选择
+				return;
+			}
+			
+			// 宽度不足时，自动收起右边栏
+			if (!hasEnoughSpaceForTOC() && !isRightSidebarCollapsed) {
+				isRightSidebarCollapsed = true;
+				applyRightSidebarState(true);
+				// 标记为自动收起，不是用户手动操作
+				toggleButton?.setAttribute('data-auto-collapsed', 'true');
+			}
+			// 宽度恢复且之前是自动收起的，自动展开
+			else if (hasEnoughSpaceForTOC() && isRightSidebarCollapsed && toggleButton?.getAttribute('data-auto-collapsed') === 'true') {
+				isRightSidebarCollapsed = false;
+				applyRightSidebarState(true);
+				toggleButton?.removeAttribute('data-auto-collapsed');
+			}
+		}
+		
+		// 应用初始状态
+		function applyRightSidebarState(animate = false) {
+			if (!animate) {
+				rightSidebar.style.transition = 'none';
+				mainGrid.style.transition = 'none';
+			}
+			
+			const tipText = toggleTip?.querySelector('.tip-text');
+			
+			if (isRightSidebarCollapsed) {
+				rightSidebar.classList.add('right-sidebar-collapsed');
+				mainGrid.classList.add('right-sidebar-hidden');
+				toggleIcon?.classList.add('rotate-180');
+				toggleButton?.classList.add('sidebar-collapsed');
+				if (tipText) tipText.textContent = i18nRightSidebarShow;
+			} else {
+				rightSidebar.classList.remove('right-sidebar-collapsed');
+				mainGrid.classList.remove('right-sidebar-hidden');
+				toggleIcon?.classList.remove('rotate-180');
+				toggleButton?.classList.remove('sidebar-collapsed');
+				if (tipText) tipText.textContent = i18nRightSidebarHide;
+			}
+			
+			if (!animate) {
+				setTimeout(() => {
+					rightSidebar.style.transition = '';
+					mainGrid.style.transition = '';
+				}, 50);
+			}
+			
+			// 更新按钮位置
+			updateToggleButtonPosition();
+		}
+		
+		// 更新按钮位置（根据右边栏状态）
+		function updateToggleButtonPosition() {
+			const mainContent = document.getElementById('swup-container');
+			if (!mainContent || !toggleButton) return;
+			
+			const mainContentRect = mainContent.getBoundingClientRect();
+			
+			if (isRightSidebarCollapsed) {
+				// 收起时：按钮在主内容右边界外侧（向右移动一点）
+				toggleButton.style.left = `${mainContentRect.right + 5}px`;
+			} else {
+				// 展开时：按钮在主内容右边界上（稍微向左）
+				toggleButton.style.left = `${mainContentRect.right - 10}px`;
+			}
+		}
+		
+		// 初始应用状态（无动画）
+		applyRightSidebarState(false);
+		
+		// 初始检查按钮可见性
+		updateToggleButtonVisibility();
+		
+		// 初始检查宽度
+		handleResponsiveCollapse();
+		
+		// 自动隐藏提示的定时器
+		let autoHideTipTimeout;
+		
+		// 如果侧边栏收起，显示提示并在3秒后自动隐藏
+		if (isRightSidebarCollapsed && toggleTip) {
+			toggleTip.style.opacity = '0.85';
+			autoHideTipTimeout = setTimeout(function() {
+				if (toggleTip && !toggleButton.matches(':hover')) {
+					toggleTip.style.opacity = '0';
+				}
+			}, 3000);
+		}
+		
+		// 点击按钮切换状态
+		toggleButton.addEventListener('click', function(e) {
+			e.preventDefault();
+			isRightSidebarCollapsed = !isRightSidebarCollapsed;
+			localStorage.setItem('rightSidebarCollapsed', String(isRightSidebarCollapsed));
+			// 标记为用户手动设置
+			userManuallySet = true;
+			localStorage.setItem('rightSidebarManuallySet', 'true');
+			// 移除自动收起标记
+			toggleButton?.removeAttribute('data-auto-collapsed');
+			applyRightSidebarState(true);
+			
+			// 清除之前的自动隐藏定时器
+			clearTimeout(autoHideTipTimeout);
+			
+			// 如果切换后是收起状态，3秒后自动隐藏提示
+			if (isRightSidebarCollapsed && toggleTip) {
+				toggleTip.style.opacity = '0.85';
+				autoHideTipTimeout = setTimeout(function() {
+					if (toggleTip && !toggleButton.matches(':hover')) {
+						toggleTip.style.opacity = '0';
+					}
+				}, 3000);
+			}
+		});
+		
+		// 鼠标悬停显示提示
+		toggleButton.addEventListener('mouseenter', function() {
+			// 清除自动隐藏定时器
+			clearTimeout(autoHideTipTimeout);
+			if (toggleTip) {
+				toggleTip.style.opacity = '1';
+			}
+		});
+		
+		toggleButton.addEventListener('mouseleave', function() {
+			if (toggleTip) {
+				// 如果右边栏已收起，启动自动隐藏定时器
+				if (isRightSidebarCollapsed) {
+					toggleTip.style.opacity = '0.85';
+					autoHideTipTimeout = setTimeout(function() {
+						if (toggleTip && !toggleButton.matches(':hover')) {
+							toggleTip.style.opacity = '0';
+						}
+					}, 3000);
+				} else {
+					toggleTip.style.opacity = '0';
+				}
+			}
+		});
+		
+		// 监听窗口大小变化，更新按钮位置和响应式收起
+		let resizeTimeout;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(function() {
+				updateToggleButtonPosition();
+				handleResponsiveCollapse();
+				// 窗口大小变化时也要检查按钮是否应该显示
+				updateToggleButtonVisibility();
+			}, 100);
+		});
+		
+		// 监听滚动，更新按钮位置
+		let scrollTimeout;
+		window.addEventListener('scroll', function() {
+			clearTimeout(scrollTimeout);
+			scrollTimeout = setTimeout(updateToggleButtonPosition, 50);
+		}, { passive: true });
+		
+		// 监听布局模式切换事件
+		window.addEventListener('layoutChange', function(event) {
+			// 直接从事件中获取布局模式，而不是从 DOM 中读取
+			const newLayout = event.detail?.layout;
+			// 检查是否为桌面端
+			const isDesktop = window.innerWidth >= 1280;
+
+			if (newLayout) {
+				if (newLayout === 'grid' || !isDesktop) {
+					// 网格模式下或移动端隐藏按钮
+					toggleButton.style.display = 'none';
+				} else {
+					// 列表模式下且在桌面端显示按钮
+					toggleButton.style.display = 'flex';
+					// 列表模式下，更新按钮位置以确保位置正确
+					setTimeout(updateToggleButtonPosition, 100);
+				}
+			} else {
+				// 降级处理：如果事件中没有布局信息，延迟后从 DOM 读取
+				setTimeout(updateToggleButtonVisibility, 50);
+			}
+		});
+	}
+	
+	// DOM 加载后初始化
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initRightSidebarToggle);
+	} else {
+		initRightSidebarToggle();
+	}
+	
+	// 支持 Swup 页面过渡
+	document.addEventListener('swup:page:view', function() {
+		// 延迟执行以确保新页面的 DOM 已准备好
+		setTimeout(initRightSidebarToggle, 100);
+	});
 	
 	// 根据壁纸模式动态设置 banner 和全屏壁纸的显示
 	const wallpaperMode = localStorage.getItem('wallpaperMode') || defaultWallpaperMode;
@@ -421,6 +686,18 @@ const transparentClass = shouldEnableTransparency
 						}
 					}
 					
+					// 根据布局模式显示或隐藏右侧边栏控制按钮
+					const toggleButton = document.getElementById('right-sidebar-toggle');
+					if (toggleButton) {
+						// 检查是否为桌面端
+						const isDesktop = window.innerWidth >= 1280;
+						if (currentLayout === 'grid' || !isDesktop) {
+							toggleButton.style.display = 'none';
+						} else {
+							toggleButton.style.display = 'flex';
+						}
+					}
+					
 					// 关键：同时更新文章列表容器的CSS类
 					const postListContainer = document.getElementById('post-list-container');
 					if (postListContainer) {
@@ -473,15 +750,28 @@ const transparentClass = shouldEnableTransparency
 				const currentLayout = savedLayout || defaultPostListLayout;
 				mainGrid.setAttribute('data-layout-mode', currentLayout);
 				
+				const rightSidebar = document.querySelector('.right-sidebar-container');
+				const toggleButton = document.getElementById('right-sidebar-toggle');
+				
 				if (currentLayout === 'grid') {
-					const rightSidebar = document.querySelector('.right-sidebar-container');
 					if (rightSidebar) {
 						rightSidebar.classList.add('hidden-in-grid-mode');
 					}
+					if (toggleButton) {
+						toggleButton.style.display = 'none';
+					}
 				} else {
-					const rightSidebar = document.querySelector('.right-sidebar-container');
 					if (rightSidebar) {
 						rightSidebar.classList.remove('hidden-in-grid-mode');
+					}
+					if (toggleButton) {
+						// 检查是否为桌面端
+						const isDesktop = window.innerWidth >= 1280;
+						if (isDesktop) {
+							toggleButton.style.display = 'flex';
+						} else {
+							toggleButton.style.display = 'none';
+						}
 					}
 				}
 			}
@@ -496,10 +786,26 @@ const transparentClass = shouldEnableTransparency
 				const currentLayout = savedLayout || defaultPostListLayout;
 				mainGrid.setAttribute('data-layout-mode', currentLayout);
 				
+				const rightSidebar = document.querySelector('.right-sidebar-container');
+				const toggleButton = document.getElementById('right-sidebar-toggle');
+				
 				if (currentLayout === 'grid') {
-					const rightSidebar = document.querySelector('.right-sidebar-container');
 					if (rightSidebar) {
 						rightSidebar.classList.add('hidden-in-grid-mode');
+					}
+					if (toggleButton) {
+						toggleButton.style.display = 'none';
+					}
+				} else {
+					// 列表模式
+					if (toggleButton) {
+						// 检查是否为桌面端
+						const isDesktop = window.innerWidth >= 1280;
+						if (isDesktop) {
+							toggleButton.style.display = 'flex';
+						} else {
+							toggleButton.style.display = 'none';
+						}
 					}
 				}
 			}
@@ -705,6 +1011,28 @@ const transparentClass = shouldEnableTransparency
             {/* 右侧边栏 - 在双侧边栏模式下渲染，CSS控制显示隐藏 */}
             {isBothSidebarMode && hasRightSidebarComponents && <div class={`right-sidebar-container ${rightSidebarClass} ${transparentClass}`}><RightSideBar headings={headings}></RightSideBar></div>}
 
+            {/* 右边栏控制按钮 - 仅在桌面端双侧边栏模式且有右侧边栏组件且配置启用时显示 */}
+            {isBothSidebarMode && hasRightSidebarComponents && showRightControlButton && (
+                <button
+                    id="right-sidebar-toggle"
+                    class="hidden lg:flex fixed items-center justify-center z-40 transition-all duration-300 ease-in-out"
+                    style="top: 50%; transform: translateY(-50%);"
+                    aria-label={i18n(I18nKey.rightSidebarShow)}
+                    title={i18n(I18nKey.rightSidebarShow)}
+                >
+                    <div class="toggle-button-inner flex items-center">
+                        <div class="toggle-tip absolute whitespace-nowrap bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.20_0.015_var(--hue))] text-[oklch(0.5_0.14_var(--hue))] dark:text-[oklch(0.75_0.14_var(--hue))] px-4 py-2.5 rounded-lg shadow-xl pointer-events-none transition-all duration-200 text-sm font-medium border border-[oklch(0.85_0.02_var(--hue))] dark:border-[oklch(0.30_0.02_var(--hue))] backdrop-blur-sm">
+                            <span class="tip-text">{i18n(I18nKey.rightSidebarShow)}</span>
+                            <!-- 消息气泡箭头 -->
+                            <span class="tip-arrow"></span>
+                        </div>
+                        <div class="toggle-icon-wrapper bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[oklch(0.20_0.015_var(--hue))] hover:bg-[oklch(0.90_0.03_var(--hue))] dark:hover:bg-[oklch(0.25_0.02_var(--hue))] text-[oklch(0.5_0.14_var(--hue))] dark:text-[oklch(0.75_0.14_var(--hue))] rounded-full w-10 h-10 flex items-center justify-center shadow-xl cursor-pointer transition-all duration-200 backdrop-blur-sm border border-[oklch(0.85_0.02_var(--hue))] dark:border-[oklch(0.30_0.02_var(--hue))]">
+                            <Icon name="material-symbols:chevron-right-rounded" class="text-2xl chevron-icon transition-transform duration-300" />
+                        </div>
+                    </div>
+                </button>
+            )}
+
             <main id="swup-container" class={`${mainContentClass} transition-main`}>
                 <div id="content-wrapper" class="onload-animation transition-leaving">
                     <!-- the overflow-hidden here prevent long text break the layout-->
@@ -820,6 +1148,106 @@ body.no-banner-mode .absolute.w-full.z-30 {
     .mobile-both-sidebar .footer {
         grid-column: 1 / -1 !important;
     }
+}
+
+/* 右边栏展开/收起控制样式 */
+#right-sidebar-toggle {
+    pointer-events: auto;
+}
+
+.toggle-button-inner {
+    position: relative;
+}
+
+.toggle-icon-wrapper {
+    transition: all 0.2s ease-in-out;
+}
+
+.toggle-icon-wrapper:hover {
+    transform: scale(1.1);
+}
+
+.toggle-icon-wrapper:active {
+    transform: scale(0.95);
+}
+
+/* 提示框动画效果 */
+.toggle-tip {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    /* 使用 right 定位确保提示框始终在按钮左侧，避免覆盖按钮 */
+    right: 100%;
+    margin-right: 1rem; /* 增加与按钮的间距 */
+    transform: translateX(5px);
+    white-space: nowrap; /* 防止文字换行 */
+    max-width: none; /* 允许提示框根据内容自动调整宽度 */
+}
+
+/* 鼠标悬停时显示提示 */
+#right-sidebar-toggle:hover .toggle-tip {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* 右边栏收起时，默认显示提示（不需要悬停） */
+#right-sidebar-toggle.sidebar-collapsed .toggle-tip {
+    opacity: 0.85;
+    transform: translateX(0);
+}
+
+/* 右边栏收起时悬停，提示完全不透明 */
+#right-sidebar-toggle.sidebar-collapsed:hover .toggle-tip {
+    opacity: 1;
+}
+
+/* 右边栏收起状态 */
+.right-sidebar-collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 右边栏收起时，内部所有子元素也隐藏 */
+.right-sidebar-collapsed * {
+    display: none !important;
+}
+
+/* 右边栏展开状态 */
+.right-sidebar-container {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible;
+}
+
+/* 右边栏隐藏时，调整网格布局 - 直接移除右侧栏列 */
+#main-grid {
+    transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 1280px) {
+    #main-grid.right-sidebar-hidden {
+        grid-template-columns: 17.5rem 1fr !important;
+    }
+    
+    /* 收起时主内容区域占据剩余空间 */
+    #main-grid.right-sidebar-hidden #swup-container {
+        grid-column: 2 / 3 !important;
+    }
+}
+
+/* 图标旋转效果 */
+.chevron-icon {
+    transition: transform 0.3s ease-in-out;
+}
+
+.chevron-icon.rotate-180 {
+    transform: rotate(180deg);
 }
 
 /* 移动端横幅优化 - 小屏手机 (320px - 480px) */

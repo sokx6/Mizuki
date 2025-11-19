@@ -297,4 +297,8 @@ export const en: Translation = {
 	[Key.calendarOctober]: "Oct",
 	[Key.calendarNovember]: "Nov",
 	[Key.calendarDecember]: "Dec",
+
+	// 右边栏控制
+	[Key.rightSidebarShow]: "Click to show right sidebar",
+	[Key.rightSidebarHide]: "Click to hide right sidebar",
 };

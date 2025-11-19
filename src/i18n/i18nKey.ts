@@ -280,6 +280,10 @@ enum I18nKey {
 	calendarOctober = "calendarOctober",
 	calendarNovember = "calendarNovember",
 	calendarDecember = "calendarDecember",
+
+	// 右边栏控制
+	rightSidebarShow = "rightSidebarShow",
+	rightSidebarHide = "rightSidebarHide",
 }
 
 export default I18nKey;

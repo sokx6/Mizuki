@@ -27,7 +27,11 @@ const allTags = Array.from(new Set(friendsList.flatMap((item) => item.tags)));
 ---
 
 <MainGridLayout title={i18n(I18nKey.friends)} description={i18n(I18nKey.friends)}>
-	<!-- 引入右侧边栏布局管理器 -->
+	<!-- 只在友情链接页面加载脚本 -->
+	<script is:inline>
+		// 标记当前页面为友情链接页面
+		window.isFriendsPage = true;
+	</script>
   <script>
     import('/src/scripts/right-sidebar-layout.js');
   </script>
@@ -71,14 +75,14 @@ const allTags = Array.from(new Set(friendsList.flatMap((item) => item.tags)));
 				<!-- 标签筛选 -->
 				<div class="filter-container flex flex-wrap gap-2">
 					<button 
-						class="tag-filter active"
+						class="filter-tag active"
 						data-tag="all"
 					>
 						{i18n(I18nKey.friendsFilterAll)}
 					</button>
 					{allTags.map(tag => (
 						<button 
-							class="tag-filter"
+							class="filter-tag"
 							data-tag={tag}
 						>
 							{tag}
@@ -246,7 +250,13 @@ const allTags = Array.from(new Set(friendsList.flatMap((item) => item.tags)));
 	}
 	
 	/* 标签筛选按钮样式 - 与番剧页面一致 */
-	.tag-filter {
+	.filter-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	
+	.filter-tag {
 		padding: 0.5rem 1rem;
 		border: 1px solid var(--line-divider);
 		border-radius: var(--radius-large);
@@ -255,42 +265,26 @@ const allTags = Array.from(new Set(friendsList.flatMap((item) => item.tags)));
 		font-size: 0.875rem;
 		font-weight: 500;
 		cursor: pointer;
-		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		transition: all 0.2s ease;
 		white-space: nowrap;
-		position: relative;
-		overflow: hidden;
 	}
 	
-	.tag-filter::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: var(--primary);
-		opacity: 0;
-		transition: opacity 0.3s ease;
-		z-index: -1;
-	}
-	
-	.tag-filter:hover:not(.active) {
+	.filter-tag:hover:not(.active) {
 		background: var(--btn-hover-bg);
 		border-color: var(--primary);
-		transform: translateY(-2px);
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		transform: translateY(-1px);
 	}
 	
-	.tag-filter.active {
+	.filter-tag.active {
 		background: var(--primary);
 		color: white;
 		border-color: var(--primary);
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
 	}
 	
-	.tag-filter.active:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 6px 16px rgba(var(--color-primary-rgb), 0.4);
+	.filter-tag.active:hover {
+		background: var(--primary) !important;
+		color: white !important;
+		border-color: var(--primary) !important;
+		transform: translateY(-1px);
 	}
 </style>

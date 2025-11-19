@@ -74,6 +74,19 @@ const initialLayoutClass =
         if (existingMode === currentLayout) {
           console.debug("Layout already correct, skipping update to avoid flicker");
           postListContainer.classList.add("js-initialized");
+          
+          // 即使布局正确，也要确保按钮状态正确
+          const toggleButton = document.getElementById('right-sidebar-toggle');
+          if (toggleButton) {
+            // 检查是否为桌面端（lg 断点是 1024px）
+            const isDesktop = window.innerWidth >= 1024;
+            if (currentLayout === 'grid' || !isDesktop) {
+              (toggleButton as HTMLElement).style.display = 'none';
+            } else {
+              (toggleButton as HTMLElement).style.display = 'flex';
+            }
+          }
+          
           publishLayoutInit();
           return;
         }
@@ -86,6 +99,12 @@ const initialLayoutClass =
       } else {
         // 移动端：只添加初始化标记，不更改布局（CSS已处理）
         postListContainer.classList.add("js-initialized");
+        
+        // 移动端按钮始终隐藏
+        const toggleButton = document.getElementById('right-sidebar-toggle');
+        if (toggleButton) {
+          (toggleButton as HTMLElement).style.display = 'none';
+        }
       }
       
       // 发布布局初始化事件
@@ -99,6 +118,20 @@ const initialLayoutClass =
 
     // 添加切换动画类
     postListContainer.classList.add("layout-switching");
+
+    // 立即更新按钮状态（在布局更新之前）
+    const toggleButton = document.getElementById('right-sidebar-toggle');
+    if (toggleButton) {
+      // 检查是否为桌面端（lg 断点是 1024px）
+      const isDesktop = window.innerWidth >= 1024;
+      if (layout === 'grid' || !isDesktop) {
+        // 网格模式或移动端隐藏按钮
+        (toggleButton as HTMLElement).style.display = 'none';
+      } else {
+        // 列表模式且桌面端显示按钮
+        (toggleButton as HTMLElement).style.display = 'flex';
+      }
+    }
 
     // 移除现有布局类
     postListContainer.classList.remove("list-mode", "grid-mode");

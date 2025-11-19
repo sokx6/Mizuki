@@ -164,7 +164,6 @@ export type SiteConfig = {
 		enable: boolean;
 		depth: 1 | 2 | 3;
 		useJapaneseBadge?: boolean; // 使用日语假名标记（あいうえお...）代替数字
-		useFloatingNav?: boolean; // 是否启用悬浮导航，false则使用固定位置的TOC组件
 	};
 	generateOgImages: boolean;
 	favicon: Favicon[];
@@ -323,6 +322,7 @@ export type WidgetComponentConfig = {
 
 export type SidebarLayoutConfig = {
 	position: "unilateral" | "both"; // 侧边栏位置：单侧或双侧
+	showRightControlButton: boolean; // 是否显示右侧边栏切换按钮
 	components: WidgetComponentConfig[]; // 组件配置列表
 	defaultAnimation: {
 		enable: boolean; // 是否启用默认动画
