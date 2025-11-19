@@ -235,8 +235,16 @@ export const navBarConfig: NavBarConfig = {
 			url: "/content/",
 			icon: "material-symbols:person",
 			children: [
-				LinkPreset.Anime,
-				LinkPreset.Diary,
+				{
+					name: "Anime",
+					url: "/anime/",
+					icon: "material-symbols:movie",
+				},
+				{
+					name: "Diary",
+					url: "/diary/",
+					icon: "material-symbols:book",
+				},
 				{
 					name: "画廊",
 					url: "/albums/",
@@ -254,7 +262,18 @@ export const navBarConfig: NavBarConfig = {
 			name: "关于",
 			url: "/content/",
 			icon: "material-symbols:info",
-			children: [LinkPreset.About, LinkPreset.Friends],
+			children: [
+				{
+					name: "About",
+					url: "/about/",
+					icon: "material-symbols:person",
+				},
+				{
+					name: "Friends",
+					url: "/friends/",
+					icon: "material-symbols:group",
+				},
+			],
 		},
 		{
 			name: "其他",
