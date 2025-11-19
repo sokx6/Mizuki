@@ -107,11 +107,9 @@
 					// 更新选中状态
 					for (var j = 0; j < tagFilters.length; j++) {
 						var btn = tagFilters[j];
-						btn.classList.remove('bg-[var(--primary)]', 'text-white', 'shadow-sm');
-						btn.classList.add('bg-[var(--btn-regular-bg)]', 'text-black/70', 'dark:text-white/70');
+						btn.classList.remove('active');
 					}
-					button.classList.remove('bg-[var(--btn-regular-bg)]', 'text-black/70', 'dark:text-white/70');
-					button.classList.add('bg-[var(--primary)]', 'text-white', 'shadow-sm');
+					button.classList.add('active');
 
 					currentTag = button.getAttribute('data-tag') || 'all';
 					filterFriends();
@@ -166,23 +164,29 @@
 		}
 	}
 	
-	// MutationObserver 监听 DOM 变化
+	// MutationObserver 监听 DOM 变化（优化版本）
 	function setupMutationObserver() {
 		if (window.friendsPageState.mutationObserver) {
 			window.friendsPageState.mutationObserver.disconnect();
 		}
 		
+		// 防抖计时器
+		var debounceTimer = null;
+		
 		window.friendsPageState.mutationObserver = new MutationObserver(function(mutations) {
 			var shouldInit = false;
+			
+			// 只检查直接子节点变化，避免深度遍历的性能开销
 			for (var i = 0; i < mutations.length; i++) {
 				var mutation = mutations[i];
 				if (mutation.addedNodes && mutation.addedNodes.length > 0) {
 					for (var j = 0; j < mutation.addedNodes.length; j++) {
 						var node = mutation.addedNodes[j];
 						if (node.nodeType === 1) {
+							// 只检查关键元素，避免不必要的初始化
 							if (node.id === 'friends-grid' || 
 								node.id === 'friend-search' ||
-								(node.querySelector && node.querySelector('#friends-grid'))) {
+								node.id === 'friends-container') {
 								shouldInit = true;
 								break;
 							}
@@ -192,18 +196,22 @@
 				if (shouldInit) break;
 			}
 			
+			// 使用防抖机制，避免频繁初始化
 			if (shouldInit) {
-				console.log('[Friends Global] DOM mutation detected');
-				window.friendsPageState.initialized = false;
-				setTimeout(function() {
-					tryInit();
-				}, 50);
+				clearTimeout(debounceTimer);
+				debounceTimer = setTimeout(function() {
+					console.log('[Friends Global] DOM mutation detected (debounced)');
+					if (!window.friendsPageState.initialized) {
+						tryInit();
+					}
+				}, 200); // 200ms防抖延迟
 			}
 		});
 		
+		// 只监听body的直接子节点变化，减少性能开销
 		window.friendsPageState.mutationObserver.observe(document.body, {
 			childList: true,
-			subtree: true
+			subtree: false // 禁用深度遍历
 		});
 	}
 	
@@ -220,23 +228,28 @@
 	// 启动 MutationObserver
 	setupMutationObserver();
 	
-	// 监听所有可能的页面切换事件
+	// 监听页面切换事件（优化版本）
 	var events = [
 		'swup:contentReplaced',
-		'swup:pageView',
-		'astro:page-load',
-		'astro:after-swap'
+		'swup:pageView'
 	];
+	
+	// 防抖计时器
+	var pageSwitchTimer = null;
+	
+	function handlePageSwitch() {
+		clearTimeout(pageSwitchTimer);
+		pageSwitchTimer = setTimeout(function() {
+			console.log('[Friends Global] Page switch detected');
+			if (!window.friendsPageState.initialized) {
+				tryInit();
+			}
+		}, 300); // 300ms防抖延迟
+	}
 	
 	for (var i = 0; i < events.length; i++) {
 		(function(eventName) {
-			document.addEventListener(eventName, function() {
-				console.log('[Friends Global] Event:', eventName);
-				window.friendsPageState.initialized = false;
-				setTimeout(function() {
-					tryInit();
-				}, 100);
-			});
+			document.addEventListener(eventName, handlePageSwitch);
 		})(events[i]);
 	}
 	

@@ -1,3 +1,4 @@
+import type { CollectionEntry } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 
@@ -14,6 +15,21 @@ function joinUrl(...parts: string[]): string {
 
 export function getPostUrlBySlug(slug: string): string {
 	return url(`/posts/${slug}/`);
+}
+
+export function getPostUrlByPermalink(permalink: string): string {
+	// 移除开头的斜杠并确保固定链接在 /posts/ 路径下
+	const cleanPermalink = permalink.replace(/^\/+/, "");
+	return url(`/posts/${cleanPermalink}/`);
+}
+
+export function getPostUrl(post: CollectionEntry<"posts">): string {
+	// 如果文章有自定义固定链接，优先使用固定链接
+	if (post.data.permalink) {
+		return getPostUrlByPermalink(post.data.permalink);
+	}
+	// 否则使用默认的 slug 路径
+	return getPostUrlBySlug(post.slug);
 }
 
 export function getTagUrl(tag: string): string {
