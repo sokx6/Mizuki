@@ -1,7 +1,7 @@
 {
 	"name": "mizuki",
 	"type": "module",
-	"version": "7.3.1",
+	"version": "7.4.0",
 	"scripts": {
 		"sync-content": "node scripts/sync-content.js",
 		"init-content": "node scripts/init-content-repo.js",
@@ -36,7 +36,7 @@
 		"@iconify-json/fa6-brands": "^1.2.6",
 		"@iconify-json/fa6-regular": "^1.2.4",
 		"@iconify-json/fa6-solid": "^1.2.4",
-		"@iconify-json/material-symbols": "^1.2.46",
+		"@iconify-json/material-symbols": "^1.2.47",
 		"@iconify-json/simple-icons": "^1.2.59",
 		"@iconify/svelte": "^4.2.0",
 		"@swup/astro": "^1.7.0",
