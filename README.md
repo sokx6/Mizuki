@@ -283,20 +283,30 @@ This project is based on [Fuwari](https://github.com/saicaca/fuwari), which is l
 
 ## 🙏 Acknowledgements
 
-- Based on the original [Fuwari](https://github.com/saicaca/fuwari) template (MIT License)
-- Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
+- Based on the original [Fuwari](https://github.com/saicaca/fuwari) template
 - Inspired by [Yukina](https://github.com/WhitePaper233/yukina) - a beautiful and elegant blog template
+- Some designs are inspired by [Firefly](https://github.com/CuteLeaf/Firefly) template
+- Uses [Pio](https://github.com/Dreamer-Paul/Pio) to implement the adorable Live2D mascot plugin
+- Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
 - Icons from [Iconify](https://iconify.design/)
 
-### Special Thanks
+### 🌸 Special Thanks
 
 - **[Fuwari](https://github.com/saicaca/fuwari)** by saicaca - The original template that this project is based on. Thank you for creating such a beautiful and functional template.
 - **[Yukina](https://github.com/WhitePaper233/yukina)** - Thanks for providing design inspiration and creativity that helped shape this project. Yukina is an elegant blog template that demonstrates excellent design principles and user experience.
+- **[Firefly](https://github.com/CuteLeaf/Firefly)** - Thanks for providing excellent layout design ideas. The dual sidebar layout, article dual-column grid layout, and some widget designs and implementations have enriched Mizuki's interface.
 
-### Special Thanks
+## 🍀 Contributors
 
-- **[Yukina](https://github.com/WhitePaper233/yukina)** - Thanks for providing design inspiration and creativity that helped shape this project. Yukina is an elegant blog template that demonstrates excellent design principles and user experience.
+Thanks to all contributors for their contributions to this project. If you have any questions or suggestions, please submit an [Issue](https://github.com/matsuzaka-yuki/Mizuki/issues) or [Pull Request](https://github.com/matsuzaka-yuki/Mizuki/pulls).
 
+<a href="https://github.com/matsuzaka-yuki/Mizuki/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=matsuzaka-yuki/Mizuki" />
+</a>
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=matsuzaka-yuki/Mizuki&type=Date)](https://star-history.com/#matsuzaka-yuki/Mizuki&Date)
 ---
 
 ⭐ If you find this project helpful, please consider giving it a star!

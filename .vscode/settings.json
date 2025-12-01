@@ -17,8 +17,5 @@
 		"source.fixAll.biome": "explicit"
 	},
 	"liveServer.settings.root": "/dist",
-	"frontMatter.dashboard.openOnStart": false,
-	"[markdown]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	}
+	"frontMatter.dashboard.openOnStart": false
 }

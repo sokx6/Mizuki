@@ -135,10 +135,8 @@ const checkIsHomePage = () => {
 	const pathname = window.location.pathname;
 	// 检查是否为首页或首页的分页页面
 	// 分页格式：/, /2/, /3/, 等等
-	isHomePage = 
-		pathname === "/" || 
-		pathname === "" ||
-		/^\/\d+\/?$/.test(pathname);
+	isHomePage =
+		pathname === "/" || pathname === "" || /^\/\d+\/?$/.test(pathname);
 };
 
 const scrollToHeading = (id: string) => {

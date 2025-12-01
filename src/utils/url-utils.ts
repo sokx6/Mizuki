@@ -1,4 +1,4 @@
-import type { CollectionEntry, CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 
@@ -7,7 +7,7 @@ import { i18n } from "@i18n/translation";
  * 用于将 Astro v5 Content Layer API 的 id 转换为 URL 友好的 slug
  */
 export function removeFileExtension(id: string): string {
-	return id.replace(/\.(md|mdx|markdown)$/i, '');
+	return id.replace(/\.(md|mdx|markdown)$/i, "");
 }
 
 export function pathsEqual(path1: string, path2: string) {
@@ -68,7 +68,7 @@ export function getDir(path: string): string {
 }
 
 export function getFileDirFromPath(filePath: string): string {
-	return filePath.replace(/^src\//, '').replace(/\/[^\/]+$/, '');
+	return filePath.replace(/^src\//, "").replace(/\/[^/]+$/, "");
 }
 
 export function url(path: string) {
