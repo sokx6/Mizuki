@@ -7,7 +7,6 @@ import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import FloatingTOC from "../components/misc/FloatingTOC.astro";
 import FullscreenWallpaper from "../components/misc/FullscreenWallpaper.astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
@@ -156,6 +155,10 @@ const initialRightSidebarHidden = defaultPostListLayout === "grid";
 const showRightControlButton =
 	sidebarLayoutConfig.showRightControlButton !== false;
 
+// 右侧边栏控制按钮文案
+const i18nRightSidebarShow = i18n(I18nKey.rightSidebarShow);
+const i18nRightSidebarHide = i18n(I18nKey.rightSidebarHide);
+
 // 动态网格布局类名 - 根据侧边栏模式调整列宽
 const gridCols = `
 	${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
@@ -214,7 +217,7 @@ const transparentClass = shouldEnableTransparency
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
 
-<script type="module" is:inline define:vars={{navbarTransparentMode: siteConfig.banner?.navbar?.transparentMode || "semi", defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode, defaultPostListLayout: siteConfig.postListLayout?.defaultMode || "list", BANNER_HEIGHT: BANNER_HEIGHT}}>
+<script type="module" is:inline define:vars={{navbarTransparentMode: siteConfig.banner?.navbar?.transparentMode || "semi", defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode, defaultPostListLayout: siteConfig.postListLayout?.defaultMode || "list", BANNER_HEIGHT: BANNER_HEIGHT, showRightControlButton: showRightControlButton, i18nRightSidebarShow: i18nRightSidebarShow, i18nRightSidebarHide: i18nRightSidebarHide}}>
 
 	// 立即执行，在页面渲染前应用壁纸模式和布局模式，避免闪烁
 	(function() {
