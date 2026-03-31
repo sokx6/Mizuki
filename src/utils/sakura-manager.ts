@@ -47,14 +47,15 @@ class Sakura {
     this.config = config;
   }
 
-  draw(cxt: CanvasRenderingContext2D) {
-    cxt.save();
-    cxt.translate(this.x, this.y);
-    cxt.rotate(this.r);
-    cxt.globalAlpha = this.a;
-    cxt.drawImage(this.img, 0, 0, 40 * this.s, 40 * this.s);
-    cxt.restore();
-  }
+	draw(cxt: CanvasRenderingContext2D) {
+		cxt.save();
+		cxt.translate(this.x, this.y);
+		cxt.rotate(this.r);
+		cxt.globalAlpha = this.a;
+		// 使用 transform 替代直接 drawImage 以支持 GPU 加速
+		cxt.drawImage(this.img, 0, 0, 40 * this.s, 40 * this.s);
+		cxt.restore();
+	}
 
   update() {
     this.x = this.fn.x(this.x, this.y);
@@ -184,17 +185,20 @@ function getRandom(option: string, config: SakuraConfig): any {
 
 // 樱花管理器类
 export class SakuraManager {
-  private config: SakuraConfig;
-  private canvas: HTMLCanvasElement | null = null;
-  private ctx: CanvasRenderingContext2D | null = null;
-  private sakuraList: SakuraList | null = null;
-  private animationId: number | null = null;
-  private img: HTMLImageElement | null = null;
-  private isRunning = false;
+	private config: SakuraConfig;
+	private canvas: HTMLCanvasElement | null = null;
+	private ctx: CanvasRenderingContext2D | null = null;
+	private sakuraList: SakuraList | null = null;
+	private animationId: number | null = null;
+	private img: HTMLImageElement | null = null;
+	private isRunning = false;
+	private resizeTimeout: number | null = null;
+	private boundResizeHandler: () => void;
 
-  constructor(config: SakuraConfig) {
-    this.config = config;
-  }
+	constructor(config: SakuraConfig) {
+		this.config = config;
+		this.boundResizeHandler = this.handleResize.bind(this);
+	}
 
   // 初始化樱花特效
   async init(): Promise<void> {
@@ -221,26 +225,30 @@ export class SakuraManager {
     this.isRunning = true;
   }
 
-  // 创建画布
-  private createCanvas(): void {
-    this.canvas = document.createElement("canvas");
-    this.canvas.height = window.innerHeight;
-    this.canvas.width = window.innerWidth;
-    this.canvas.setAttribute(
-      "style",
-      `position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex};`
-    );
-    this.canvas.setAttribute("id", "canvas_sakura");
-    document.body.appendChild(this.canvas);
-    this.ctx = this.canvas.getContext("2d");
+	// 创建画布
+	private createCanvas(): void {
+		this.canvas = document.createElement("canvas");
+		this.canvas.height = window.innerHeight;
+		this.canvas.width = window.innerWidth;
+		this.canvas.setAttribute(
+			"style",
+			`position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex}; transform: translateZ(0); will-change: transform;`,
+		);
+		this.canvas.setAttribute("id", "canvas_sakura");
+		document.body.appendChild(this.canvas);
+		this.ctx = this.canvas.getContext("2d");
 
-    // 监听窗口大小变化
-    window.addEventListener("resize", this.handleResize.bind(this));
-  }
+		// 使用被动事件监听器提升滚动性能
+		window.addEventListener("resize", this.boundResizeHandler, {
+			passive: true,
+		});
+	}
 
-  // 创建樱花列表
-  private createSakuraList(): void {
-    if (!this.img || !this.ctx) return;
+	// 创建樱花列表
+	private createSakuraList(): void {
+		if (!this.img || !this.ctx) {
+			return;
+		}
 
     this.sakuraList = new SakuraList();
     const limitArray = new Array(this.config.sakuraNum).fill(
@@ -281,12 +289,16 @@ export class SakuraManager {
     }
   }
 
-  // 开始动画
-  private startAnimation(): void {
-    if (!this.ctx || !this.canvas || !this.sakuraList) return;
+	// 开始动画
+	private startAnimation(): void {
+		if (!this.ctx || !this.canvas || !this.sakuraList) {
+			return;
+		}
 
-    const animate = () => {
-      if (!this.ctx || !this.canvas || !this.sakuraList) return;
+		const animate = () => {
+			if (!this.ctx || !this.canvas || !this.sakuraList) {
+				return;
+			}
 
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.sakuraList.update();
@@ -297,29 +309,39 @@ export class SakuraManager {
     this.animationId = requestAnimationFrame(animate);
   }
 
-  // 处理窗口大小变化
-  private handleResize(): void {
-    if (this.canvas) {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
-    }
-  }
+	// 处理窗口大小变化 - 带防抖
+	private handleResize(): void {
+		if (this.resizeTimeout) {
+			cancelAnimationFrame(this.resizeTimeout);
+		}
+		this.resizeTimeout = requestAnimationFrame(() => {
+			if (this.canvas) {
+				this.canvas.width = window.innerWidth;
+				this.canvas.height = window.innerHeight;
+			}
+		});
+	}
 
-  // 停止樱花特效
-  stop(): void {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-      this.animationId = null;
-    }
+	// 停止樱花特效
+	stop(): void {
+		if (this.animationId) {
+			cancelAnimationFrame(this.animationId);
+			this.animationId = null;
+		}
+
+		if (this.resizeTimeout) {
+			cancelAnimationFrame(this.resizeTimeout);
+			this.resizeTimeout = null;
+		}
 
     if (this.canvas) {
       document.body.removeChild(this.canvas);
       this.canvas = null;
     }
 
-    window.removeEventListener("resize", this.handleResize.bind(this));
-    this.isRunning = false;
-  }
+		window.removeEventListener("resize", this.boundResizeHandler);
+		this.isRunning = false;
+	}
 
   // 切换樱花特效
   toggle(): void {
