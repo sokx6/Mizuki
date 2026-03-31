@@ -273,7 +273,7 @@ export const navBarConfig: NavBarConfig = {
 					name: "Bilibili",
 					url: "https://space.bilibili.com/1221696939",
 					external: true,
-					icon: "fa6-brands:bilibili",
+					icon: "fa7-brands:bilibili",
 				},
 			],
 		},
@@ -358,12 +358,12 @@ export const profileConfig: ProfileConfig = {
 	links: [
 		{
 			name: "Bilibli",
-			icon: "fa6-brands:bilibili",
+			icon: "fa7-brands:bilibili",
 			url: "https://space.bilibili.com/1221696939",
 		},
 		{
 			name: "GitHub",
-			icon: "fa6-brands:github",
+			icon: "fa7-brands:github",
 			url: "https://github.com/sokx6",
 		},
 	],
