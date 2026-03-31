@@ -432,20 +432,6 @@ export const commentConfig: CommentConfig = {
 		lang: SITE_LANG,
 		loading: "lazy",
 	},
-	giscus: {
-		repo: "your-github-username/your-repo-name",
-		repoId: "your-repo-id",
-		category: "Announcements",
-		categoryId: "your-category-id",
-		mapping: "pathname",
-		strict: "0",
-		reactionsEnabled: "1",
-		emitMetadata: "0",
-		inputPosition: "top",
-		theme: "preferred_color_scheme",
-		lang: SITE_LANG,
-		loading: "lazy",
-	},
 };
 
 export const shareConfig: ShareConfig = {
@@ -713,18 +699,6 @@ export const pioConfig: import("./types/config").PioConfig = {
 		close: "QWQ 下次再见~", // 关闭提示
 		link: "https://github.com/sokx6", // 关于链接
 	},
-};
-
-// 相关文章配置
-export const relatedPostsConfig: RelatedPostsConfig = {
-	enable: true,
-	maxCount: 5,
-};
-
-// 随机文章配置
-export const randomPostsConfig: RandomPostsConfig = {
-	enable: true,
-	maxCount: 5,
 };
 
 // 相关文章配置
