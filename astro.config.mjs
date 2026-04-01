@@ -32,15 +32,16 @@ import { remarkMermaid } from "./src/plugins/remark-mermaid.js";
 
 // https://astro.build/config
 export default defineConfig({
-  site: siteConfig.siteURL,
-  base: "/",
-  trailingSlash: "always",
+	site: siteConfig.siteURL,
+	base: "/",
+	trailingSlash: "always",
 
-  output: "static",
+	output: "static",
 
 	integrations: [
 		umami({
-			shareUrl: false,
+			shareUrl:
+				"https://cloud.umami.is/analytics/us/share/gKPanhZyn7IVu5BQ",
 		}),
 		swup({
 			theme: false,
