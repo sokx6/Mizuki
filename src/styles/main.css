@@ -26,18 +26,18 @@
   --breakpoint-xl: 1920px;
 }
 
-/* 导入 msyh字体 */
+/* 导入 LXGWWenKai-Regular 字体 */
 @font-face {
-  font-family: "msyh";
-  src: url("/assets/font/msyh.ttf") format("truetype");
+  font-family: "LXGWWenKai-Regular";
+  src: url("/assets/font/LXGWWenKai-Regular.ttf") format("truetype");
   font-weight: 500;
   font-display: swap;
 }
 
-/* 导入 msyh字体 */
+/* 导入 LXGWWenKai-Regular 字体 */
 @font-face {
-  font-family: "msyh";
-  src: url("/assets/font/msyh.ttf") format("truetype");
+  font-family: "LXGWWenKai-Regular";
+  src: url("/assets/font/LXGWWenKai-Regular.ttf") format("truetype");
   font-style: normal;
   font-weight: 500;
   font-display: swap;
