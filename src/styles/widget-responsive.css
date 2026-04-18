@@ -293,20 +293,20 @@
 
 /* 减少动画模式 */
 @media (prefers-reduced-motion: reduce) {
-  .widget-container,
-  .widget-animation-fade,
-  .widget-animation-slide,
-  .widget-animation-scale {
+  html.respect-reduced-motion .widget-container,
+  html.respect-reduced-motion .widget-animation-fade,
+  html.respect-reduced-motion .widget-animation-slide,
+  html.respect-reduced-motion .widget-animation-scale {
     animation: none;
     transition: none;
   }
 
-  .widget-container {
+  html.respect-reduced-motion .widget-container {
     opacity: 1;
     transform: none;
   }
 
-  .widget-container:hover {
+  html.respect-reduced-motion .widget-container:hover {
     transform: none;
   }
 }

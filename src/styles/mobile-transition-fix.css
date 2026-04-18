@@ -115,14 +115,14 @@
 
 /* 性能优化：为减少动画的用户提供支持 */
 @media (prefers-reduced-motion: reduce) {
-  .transition-main,
-  .transition-leaving,
-  .onload-animation,
-  .transition-slide-in,
-  .card-animation,
-  .nav-animation,
-  #dynamic-sidebar,
-  .widget-container {
+  html.respect-reduced-motion .transition-main,
+  html.respect-reduced-motion .transition-leaving,
+  html.respect-reduced-motion .onload-animation,
+  html.respect-reduced-motion .transition-slide-in,
+  html.respect-reduced-motion .card-animation,
+  html.respect-reduced-motion .nav-animation,
+  html.respect-reduced-motion #dynamic-sidebar,
+  html.respect-reduced-motion .widget-container {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

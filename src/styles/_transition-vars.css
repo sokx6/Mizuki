@@ -12,7 +12,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root {
+  html.respect-reduced-motion {
     --transition-duration: 0.01ms;
     --transition-stagger: 0ms;
     --transition-translate: 0;

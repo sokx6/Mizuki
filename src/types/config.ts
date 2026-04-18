@@ -57,6 +57,11 @@ export interface SiteConfig {
 		fixed: boolean;
 	};
 
+	// 无障碍偏好配置
+	accessibility?: {
+		respectReducedMotion?: boolean; // 是否遵循系统“减少动态效果”偏好
+	};
+
 	// 特色页面开关配置
 	featurePages: {
 		anime: boolean; // 番剧页面开关

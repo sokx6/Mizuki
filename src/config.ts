@@ -38,6 +38,11 @@ export const siteConfig: SiteConfig = {
 		fixed: false, // 对访问者隐藏主题色选择器
 	},
 
+	accessibility: {
+		// false: 保持站点动画（忽略系统 reduced-motion）；true: 遵循系统无障碍偏好
+		respectReducedMotion: false,
+	},
+
 	// 特色页面开关配置（关闭未使用的页面有助于提升 SEO，关闭后请记得在 navbarConfig 中移除对应链接）
 	featurePages: {
 		anime: true, // 番剧页面开关

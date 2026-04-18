@@ -156,7 +156,13 @@ if (siteConfig.font) {
 <!doctype html>
 <html
 	lang={siteLang}
-	class="bg-[var(--page-bg)] text-[14px] md:text-[16px]"
+	class:list={[
+		"bg-[var(--page-bg)] text-[14px] md:text-[16px]",
+		{
+			"respect-reduced-motion":
+				siteConfig.accessibility?.respectReducedMotion ?? false,
+		},
+	]}
 	data-overlayscrollbars-initialize
 >
 	<head>

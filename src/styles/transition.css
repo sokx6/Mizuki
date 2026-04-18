@@ -218,15 +218,15 @@ html.is-animating .transition-swup-fade {
 
 /* 减少动画的用户偏好设置 */
 @media (prefers-reduced-motion: reduce) {
-  .transition-main,
-  .transition-leaving,
-  .onload-animation,
-  .transition-slide-in,
-  .card-animation,
-  .nav-animation,
-  .waves > .parallax use,
-  .sakura-canvas,
-  .animation-element {
+  html.respect-reduced-motion .transition-main,
+  html.respect-reduced-motion .transition-leaving,
+  html.respect-reduced-motion .onload-animation,
+  html.respect-reduced-motion .transition-slide-in,
+  html.respect-reduced-motion .card-animation,
+  html.respect-reduced-motion .nav-animation,
+  html.respect-reduced-motion .waves > .parallax use,
+  html.respect-reduced-motion .sakura-canvas,
+  html.respect-reduced-motion .animation-element {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
