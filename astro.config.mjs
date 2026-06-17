@@ -1,4 +1,6 @@
 import sitemap from "@astrojs/sitemap";
+import mdx from '@astrojs/mdx';
+import { unified } from '@astrojs/markdown-remark';
 import svelte, { vitePreprocess } from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
@@ -7,7 +9,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
-import { umami } from "oddmisc";
+import { oddmisc } from "oddmisc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components";
 import rehypeExternalLinks from "rehype-external-links";
@@ -17,7 +19,7 @@ import remarkDirective from "remark-directive";
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
 
-import { siteConfig } from "./src/config.ts";
+import { siteConfig } from "./src/config/index.ts";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
 import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
@@ -38,10 +40,20 @@ export default defineConfig({
 
 	output: "static",
 
+	image: {
+		layout: "constrained",
+	},
+
+	server: {
+		port: 3000,
+	},
+
 	integrations: [
-		umami({
-			shareUrl:
-				"https://cloud.umami.is/analytics/us/share/gKPanhZyn7IVu5BQ",
+		oddmisc({
+			umami: {
+				shareUrl:
+					"https://cloud.umami.is/analytics/us/share/gKPanhZyn7IVu5BQ",
+			},
 		}),
 		swup({
 			theme: false,
@@ -91,7 +103,7 @@ export default defineConfig({
 				borderColor: "none",
 				codeFontSize: "0.875rem",
 				codeFontFamily:
-					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+					"'JetBrains Mono Variable', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', 'Microsoft JhengHei', '微軟正黑體', 'Microsoft YaHei', '微软雅黑', 'Noto Sans HK', 'Noto Sans TC', 'Noto Sans JP', 'Noto Sans SC', 'Noto Sans KR', ui-monospace, monospace",
 				codeLineHeight: "1.5rem",
 				frames: {
 					editorBackground: "var(--codeblock-bg)",
@@ -118,66 +130,97 @@ export default defineConfig({
 			preprocess: vitePreprocess(),
 		}),
 		sitemap(),
+		mdx(),
 	],
 	markdown: {
-		remarkPlugins: [
-			remarkMath,
-			remarkContent,
-			remarkFixGithubAdmonitions,
-			remarkDirective,
-			remarkSectionize,
-			parseDirectiveNode,
-			remarkMermaid,
-		],
-		rehypePlugins: [
-			rehypeKatex,
-			[
-				rehypeExternalLinks,
-				{
-					target: "_blank",
-					rel: ["nofollow", "noopener", "noreferrer"],
-				},
+		processor: unified({
+			remarkPlugins: [
+				remarkMath,
+				remarkContent,
+				remarkFixGithubAdmonitions,
+				remarkDirective,
+				remarkSectionize,
+				parseDirectiveNode,
+				remarkMermaid,
 			],
-			rehypeSlug,
-			rehypeWrapTable,
-			rehypeMermaid,
-			[
-				rehypeComponents,
-				{
-					components: {
-						github: GithubCardComponent,
-						note: (x, y) => AdmonitionComponent(x, y, "note"),
-						tip: (x, y) => AdmonitionComponent(x, y, "tip"),
-						important: (x, y) =>
-							AdmonitionComponent(x, y, "important"),
-						caution: (x, y) => AdmonitionComponent(x, y, "caution"),
-						warning: (x, y) => AdmonitionComponent(x, y, "warning"),
+			rehypePlugins: [
+				rehypeKatex,
+				[
+					rehypeExternalLinks,
+					{
+						target: "_blank",
+						rel: ["nofollow", "noopener", "noreferrer"],
 					},
-				},
-			],
-			[
-				rehypeAutolinkHeadings,
-				{
-					behavior: "append",
-					properties: {
-						className: ["anchor"],
-					},
-					content: {
-						type: "element",
-						tagName: "span",
-						properties: {
-							className: ["anchor-icon"],
-							"data-pagefind-ignore": true,
+				],
+				rehypeSlug,
+				rehypeWrapTable,
+				rehypeMermaid,
+				[
+					rehypeComponents,
+					{
+						components: {
+							github: GithubCardComponent,
+							note: (x, y) => AdmonitionComponent(x, y, "note"),
+							tip: (x, y) => AdmonitionComponent(x, y, "tip"),
+							important: (x, y) =>
+								AdmonitionComponent(x, y, "important"),
+							caution: (x, y) => AdmonitionComponent(x, y, "caution"),
+							warning: (x, y) => AdmonitionComponent(x, y, "warning"),
 						},
-						children: [{ type: "text", value: "#" }],
 					},
-				},
+				],
+				[
+					rehypeAutolinkHeadings,
+					{
+						behavior: "append",
+						properties: {
+							className: ["anchor"],
+						},
+						content: {
+							type: "element",
+							tagName: "span",
+							properties: {
+								className: ["anchor-icon"],
+								"data-pagefind-ignore": true,
+							},
+							children: [{ type: "text", value: "#" }],
+						},
+					},
+				],
+				rehypeImageWidth,
 			],
-			rehypeImageWidth,
-		],
+		}),
 	},
 	vite: {
 		plugins: [tailwindcss()],
+		// 开发环境预打包优化：将常用依赖提前编译，避免首次页面加载时 on-demand 编译导致 8s+ 的等待
+		optimizeDeps: {
+			include: [
+				"@iconify/svelte",
+				"svelte",
+				"svelte/transition",
+				"svelte/easing",
+				"overlayscrollbars",
+				"@fancyapps/ui",
+				"marked",
+				"sanitize-html",
+				"qrcode",
+			],
+		},
+		// 预热常用入口文件，让 Vite 在服务器启动后立即开始转换，而不是等到浏览器请求
+		server: {
+			warmup: {
+				clientFiles: [
+					"src/layouts/Layout.astro",
+					"src/pages/index.astro",
+					"src/components/widgets/music-player/MusicPlayer.svelte",
+					"src/components/organisms/navigation/Search.svelte",
+					"src/components/control/ThemeSwitch.svelte",
+					"src/components/features/settings/DisplaySettings.svelte",
+					"src/scripts/swup-manager.ts",
+				],
+			},
+		},
 		build: {
 			// 静态资源处理优化，防止小图片转 base64 导致 HTML 体积过大
 			assetsInlineLimit: 4096,
