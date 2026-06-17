@@ -2,7 +2,7 @@
 published: 2025-11-12
 title: UDP53
 description: 通过UDP53能绕过很多内网的门户验证
-sourceLink: "https://www.locxl.site/posts/udp53/"
+sourceLink: "https://blog.locxl.site/posts/udp53/"
 licenseName: "CC BY-SA 4.0"
 tags: [网络,UDP,DNS,门户验证]
 category: 网络

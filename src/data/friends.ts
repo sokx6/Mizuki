@@ -17,7 +17,7 @@ export const friendsData: FriendItem[] = [
 		title: "Locxl",
 		imgurl: "https://i.stardots.io/locxl/StarDots_2025-11-13T17_59_18.5840Z_6697.webp",
 		desc: "我的朋友只有我自己(悲)",
-		siteurl: "https://www.locxl.site/",
+		siteurl: "https://blog.locxl.site/",
 		tags: ["Self"],
 	},
 ];

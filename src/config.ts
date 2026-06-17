@@ -26,7 +26,7 @@ const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UT
 export const siteConfig: SiteConfig = {
 	title: "locxl",
 	subtitle: "Just a blog",
-	siteURL: "https://www.locxl.site/", // 请替换为你的站点URL，以斜杠结尾
+	siteURL: "https://blog.locxl.site/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2025-10-22", // 站点开始运行日期，用于站点统计组件计算运行天数
 
 	timeZone: SITE_TIMEZONE,
@@ -420,7 +420,7 @@ export const commentConfig: CommentConfig = {
 	enable: false, // 启用评论功能。当设置为 false 时，评论组件将不会显示在文章区域。
 	system: "twikoo", // 评论系统选择: "twikoo" | "giscus"
 	twikoo: {
-		envId: "https://www.locxl.site/twikoo-proxy",
+		envId: "https://blog.locxl.site/twikoo-proxy",
 		lang: SITE_LANG, // 设置 Twikoo 评论系统语言为中文
 	},
 	giscus: {

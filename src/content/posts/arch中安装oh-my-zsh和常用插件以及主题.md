@@ -2,7 +2,7 @@
 published: 2025-11-20
 title: arch 中安装oh my zsh和常用插件以及主题
 description: oh my zsh!
-sourceLink: "https://www.locxl.site/posts/arch中安装oh-my-zsh和常用插件以及主题"
+sourceLink: "https://blog.locxl.site/posts/arch中安装oh-my-zsh和常用插件以及主题"
 licenseName: "CC BY-SA 4.0"
 tags:
   - arch
@@ -100,7 +100,7 @@ source ~/.zshrc
 
 然后你就应该能看到主题配置引导了，如果有乱码的话建议安装字体，例如 [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/)
 
-这里有一些推荐的[字体](https://www.locxl.site/posts/windows-terminal-美化/#安装字体)
+这里有一些推荐的[字体](https://blog.locxl.site/posts/windows-terminal-美化/#安装字体)
 
 后续如果想重新进配置引导的话可以输入`p10k configure`指令。
 
