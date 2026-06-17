@@ -1,2 +1,9 @@
 * text=auto eol=lf
 *.js linguist-language=astro
+
+# 内容文件保护：合并上游时自动保留本地版本
+src/content/posts/** merge=ours
+src/content/spec/** merge=ours
+src/data/** merge=ours
+public/images/** merge=ours
+src/i18n/languages/** merge=ours
