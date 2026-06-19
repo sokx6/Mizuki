@@ -2,8 +2,8 @@ import type { PioConfig } from "../types/config";
 
 // Pio 看板娘配置
 export const pioConfig: PioConfig = {
-	enable: true, // 启用看板娘
-	models: ["/pio/models/NOIR/noir.model3.json"], // 默认模型路径
+	enable: false, // 禁用看板娘以提升性能
+	models: ["/pio/models/pio/model.json"], // 默认模型路径
 	position: "left", // 模型位置
 	width: 280, // 默认宽度
 	height: 250, // 默认高度
@@ -11,16 +11,50 @@ export const pioConfig: PioConfig = {
 	hiddenOnMobile: true, // 默认在移动设备上隐藏
 	hideAboutMenu: false, // 隐藏内置 About 菜单按钮
 	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
+		welcome: "欢迎欢迎！", // 欢迎词
 		touch: [
-			"What are you doing?",
-			"Stop touching me!",
+			"你在干什么？",
+			"再摸我就报警了",
 			"HENTAI!",
-			"Don't bully me like that!",
+			"不可以这样欺负我啦！",
+			"你这样我会生气的！",
+			"不要乱碰啦，会害羞的！",
+			"再摸我要叫主人了哦！",
+			"你是不是很喜欢我呀？",
+			"小心我咬你哦！",
+			"手手放哪里呢？",
+			"这样真的可以吗？",
+			"哼，不理你了！",
+			"你再这样我要躲起来了！",
+			"摸摸头可以，别乱摸！",
+			"你是不是调皮了？",
+			"要温柔一点嘛~",
+			"你是不是想让我害羞？",
+			"别这样啦，会被别人看到的！",
+			"你再摸我就要哭了哦！",
+			"主人救命，有人欺负我！",
+			"你是不是喜欢捉弄我？",
+			"我会记住你的！",
+			"再这样我要生气啦！",
+			"你摸够了吗？",
+			"不要一直摸啦，会坏掉的！",
+			"你是不是很无聊呀？",
+			"我会害羞的啦~",
+			"你是不是在测试我？",
+			"别闹啦，我要认真工作了！",
+			"你这样我真的会害羞的！",
+			"再摸我就要变脸了哦！",
+			"你是不是想让我陪你聊天？",
+			"我可是有脾气的哦！",
+			"你要是再摸，我就不理你了！",
+			"你是不是觉得我很可爱？",
+			"别摸啦，快去学习！",
+			"你是不是想让我撒娇？",
+			"再这样我要叫人了！",
 		], // 触摸提示
-		home: "Click here to go back to homepage!", // 首页提示
-		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
-		close: "QWQ See you next time~", // 关闭提示
-		link: "https://github.com/LyraVoid/Mizuki", // 关于链接
+		home: "点击这里返回首页！", // 首页提示
+		skin: ["想看看我的新衣服吗？", "新衣服真好看~"], // 换装提示
+		close: "QWQ 下次再见~", // 关闭提示
+		link: "https://github.com/sokx6", // 关于链接
 	},
 };
