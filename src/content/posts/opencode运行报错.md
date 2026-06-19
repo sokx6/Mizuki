@@ -55,8 +55,7 @@ NODE_PATH='/home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_
 ...
 ```
 从`NODE_PATH`提取真实包路径:
-`/home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_modules/opencode-ai
-`
+`/home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_modules/opencode-ai`
 4. 手动执行postinstall脚本
 ```bash
 cd /home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_modules/opencode-ai
@@ -79,5 +78,7 @@ pnpm add -g opencode-ai
 
 # 后记
 后来我发现这似乎是一个opencode 1.15.1版本后才引入的问题，因为v1.15.1起，opencode新增了postinstall.mjs负责下载平台特定Rust二进制，但是pnpm默认跳过了postinstall导致二进制未下载，使得只剩下一个空壳JS包装器，启动时候发现二进制不存在然后报错。
-这在GitHub早已有了类似的issue: [v1.15.1+ Breaks Bun Installs #27906:](https://github.com/anomalyco/opencode/issues/27906)
+这在GitHub早已有了类似的issue: 
+[v1.15.1+ Breaks Bun Installs #27906:](https://github.com/anomalyco/opencode/issues/27906)
+
 [opencode-ai's postinstall script was not run - stuck after upgrade #29270](https://github.com/anomalyco/opencode/issues/29270)
