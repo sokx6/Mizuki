@@ -6,7 +6,7 @@ sourceLink: https://github.com/sokx6/music-cli/
 licenseName: "CC BY-SA 4.0"
 tags: [开发]
 category: 记录
-author: Locxl
+author: locxl
 image: 'https://i.stardots.io/locxl/StarDots_2025-11-18T13_18_28.1240Z_3772.png'
 imageAlt: 'music-cli 开发'
 ---

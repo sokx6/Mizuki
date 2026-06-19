@@ -14,7 +14,7 @@ export interface FriendItem {
 export const friendsData: FriendItem[] = [
 	{
 		id: 1,
-		title: "Locxl",
+		title: "locxl",
 		imgurl: "https://i.stardots.io/locxl/StarDots_2025-11-13T17_59_18.5840Z_6697.webp",
 		desc: "我的朋友只有我自己(悲)",
 		siteurl: "https://blog.locxl.site/",

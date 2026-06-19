@@ -60,7 +60,7 @@ export const siteConfig: SiteConfig = {
 		// 显示模式："text-icon" 显示图标+文本，"logo" 仅显示Logo
 		mode: "text-icon",
 		// 顶栏标题文本
-		text: "Locxl",
+		text: "locxl",
 		// 顶栏标题图标路径，默认使用 public/assets/home/home.png
 		icon: "assets/home/home.jpg",
 		// 网站Logo图片路径
@@ -354,7 +354,7 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.png", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "Locxl",
+	name: "locxl",
 	bio: "一个大一新生说是",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
