@@ -35,6 +35,7 @@ pnpm 出于安全考虑，默认跳过所有 `postinstall`脚本,这导致`openc
 ```bash
 which opencode
 ```
+
 2. 尝试找`node_modules`(失败)
 ```bash
 pnpm root -g
@@ -44,6 +45,7 @@ pnpm root -g
 ls /home/locxl/.local/share/pnpm/global/v11/
 ```
 输出: 只有哈希命名的目录，没有`node_mudules/opencode-ai`
+
 3. 通过shim脚本找到真实路径
 ```bash
 cat /home/locxl/.local/share/pnpm/opencode
@@ -56,18 +58,21 @@ NODE_PATH='/home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_
 ```
 从`NODE_PATH`提取真实包路径:
 `/home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_modules/opencode-ai`
+
 4. 手动执行postinstall脚本
 ```bash
 cd /home/locxl/.local/share/pnpm/global/5/.pnpm/opencode-ai@1.15.5/node_modules/opencode-ai
 node postinstall.mjs
 ```
 执行成功
+
 5. 验证
 ```bash
 opencode --version
 ```
 输出: `1.15.5`
 成功
+
 ## 或者也可以
 启用pnpm脚本后重装
 ```bash
