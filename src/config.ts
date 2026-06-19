@@ -22,14 +22,11 @@ import { LinkPreset } from "./types/config";
 
 // 定义站点语言
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
-const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UTC+8
 export const siteConfig: SiteConfig = {
 	title: "locxl",
 	subtitle: "Just a blog",
 	siteURL: "https://blog.locxl.site/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2025-10-22", // 站点开始运行日期，用于站点统计组件计算运行天数
-
-	timeZone: SITE_TIMEZONE,
 
 	lang: SITE_LANG,
 
@@ -100,6 +97,8 @@ export const siteConfig: SiteConfig = {
 		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（双列布局）
 		// 注意：如果侧边栏配置启用了"both"双侧边栏，则无法使用文章列表"grid"网格（双列）布局
 		defaultMode: "list",
+		// 是否启用布局切换功能
+		enable: true,
 		// 是否允许用户切换布局
 		allowSwitch: true,
 		// 文章列表页分类导航条配置
